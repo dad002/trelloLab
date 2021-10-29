@@ -40,3 +40,6 @@ class DataBase:
 
     def get_user_token_by_tele_token(self,token):
         return self.cur.execute(f"""SELECT user_token FROM user_token WHERE tele_token='{token}'""").fetchone()[0]
+
+    def get_user_token_and_tele_token_by_id(self, id):
+        return self.cur.execute(f"SELECT tele_token, user_token FROM user_token WHERE user_id = '{id}'").fetchone()

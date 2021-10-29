@@ -51,8 +51,9 @@ def process_callback_boards_button(callback_query: CallbackQuery):
 
 
 def send_info(data):
-	print(data)
-	bot.send_message(694732085, data)
+	if data.get('id'):
+		res = db.get_user_token_and_tele_token_by_id(data['id']):
+		bot.send_message(res[0], data)
 
 
 if __name__ == '__main__':
