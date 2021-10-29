@@ -20,7 +20,7 @@ def set_webhook(yourToken):
     url = f"https://api.trello.com/1/webhooks?key={yourKey}&token={yourToken}"
 
     query = {
-       'callbackURL': 'https://trellostudy.herokuapp.com/',
+       'callbackURL': 'https://trellostudy.herokuapp.com/webhook',
        'idModel': '5ebab65e0365003fd12a934c'
     }
 
