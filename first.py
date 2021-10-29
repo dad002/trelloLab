@@ -44,3 +44,28 @@ def get_your_id(yourToken):
         return json.loads(response.text)['id']
     else:
         return None
+
+def get_your_login(yourToken):
+    url = f'https://api.trello.com/1/members/me/?key={yourKey}&token={yourToken}'
+
+    response = requests.request(
+        "GET",
+        url
+    )
+
+    if response.status_code == 200:
+        return json.loads(response.text)['username']
+    else:
+        return None
+
+def get_members_by_card_id(id, yourToken):
+    url = f"https://api.trello.com/1/card/{id}/?key={yourKey}&token={yourToken}"
+
+    response = requests.request(
+        "GET",
+        url
+    )
+
+    return json.loads(response.text)['idMembers'] if response.status_code == 200 else None
+
+get_members_by_card_id('5ebab65e0365003fd12a934c', 'cfc80cc61a595690628b22b0fcf4a5a9dc86a8611588e45f5019a5269cb17446')

@@ -29,11 +29,14 @@ def token_accept(message):
 	boards = first.get_boards(data[1])
 	if boards != None:
 
+
 		inline_keyboard = InlineKeyboardMarkup()
 		for board in boards:
 			inline_keyboard.add(InlineKeyboardButton(board['name'], callback_data = '1%' + board['name'] + '%' + board['id']))
 
-		db.set_user_token_data((message.chat.id, data[1], first.get_your_id(data[1])))
+		user_login = first.get_your_login(data[1])
+
+		db.set_user_token_data((message.chat.id, data[1], first.get_your_id(data[1]), user_login))
 
 		first.set_webhook(data[1])
 
@@ -45,21 +48,33 @@ def token_accept(message):
 @bot.callback_query_handler(func=lambda c: c.data.split('%')[0] == '1')
 def process_callback_boards_button(callback_query: CallbackQuery):
 	data = callback_query.data.split('%')
-	bot.answer_callback_query(callback_query)
-	db.set_user_board_data((db.get_user_token_by_tele_token(callback_query.chat.id), data[2]))
+	bot.answer_callback_query(callback_query.id)
+	db.set_user_board_data((db.get_user_token_by_tele_token(callback_query.from_user.id), data[2]))
 	bot.send_message(callback_query.from_user.id, f'Доска *{" ".join(data[1:len(data) - 1])}* успешно добавлена для отслеживания', parse_mode = 'Markdown')
 
 
 def send_info(data):
 	if data.get('id'):
+
 		res = db.get_user_token_and_tele_token_by_id(data['id'])
 		bot.send_message(res[0], data['comment'])
+
 	elif data.get('card'):
-		pass
+
+		tokens = db.get_tokens()
+		print(tokens)
+		for token in tokens:
+			tmp = first.get_members_by_card_id(data['card'], token)
+			if tmp != None:
+				for elem in tmp:
+					res = db.get_user_token_and_tele_token_by_id(data['id'])
+					bot.send_message(res[0], data['comment'])
+
 	elif data.get('users'):
 		for user in data['users'][1:]:
-			user.rstrip()
-			print(user)
+			res = db.get_tele_token_by_login(user.rstrip())
+			bot.send_message(res, data['comment'])
 
 if __name__ == '__main__':
 	bot.infinity_polling()
+	bot.send_info({'card': '5ebab65e0365003fd12a934c'})
