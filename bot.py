@@ -51,6 +51,7 @@ def process_callback_boards_button(callback_query: CallbackQuery):
 
 
 def send_info(data):
+	print(data)
 	bot.send_message(694732085, data)
 
 

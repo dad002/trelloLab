@@ -14,7 +14,6 @@ user_token = ''
 @app.route('/webhook', methods=['POST','HEAD'])
 def webhook():
     if request.method == 'POST':
-        bot.send_info(123)
 
         res = {
             'action': request.json["action"]["type"],
@@ -23,8 +22,6 @@ def webhook():
             'author': '',
             'user': ''
         }
-
-        comment = ''
 
         if res['action'] == 'updateCard':
             res['author'] = request.json['action']['memberCreator']['username']
@@ -57,7 +54,8 @@ def webhook():
             res['board'] = request.json['action']['data']['board']['name']
             res['comment'] = f"Комментарий к вашей карточке {request.json['action']['data']['card']['name']}:\n{request.json['action']['data']['text']}\n{res['author']}"
 
-
+        print(res)
+        print('----------')
         bot.send_info(res)
         
 
