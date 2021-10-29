@@ -17,32 +17,49 @@ def webhook():
         bot.send_info(123)
 
         res = {
-            'action': request.json['action']['type'],
+            'action': request.json["action"]["type"],
             'comment': '',
-            'board': request.json['action']['data']['board']['name'],
-            'list': request.json['action']['data']['list']['name'],
-            'author': request.json['action']['memberCreator']['username']
+            'board': '',
+            'author': '',
+            'user': ''
         }
 
         comment = ''
 
-        if res['action'] == 'updateCard':            
+        if res['action'] == 'updateCard':
+            res['author'] = request.json['action']['memberCreator']['username']
+            res['board'] = request.json['action']['data']['board']['name']
             if request.json['action']['data'].get('listBefore'):
-                comment = f"Вас переместил {res['author']} из листа {request.json['action']['data']['listBefore']['name']} в {request.json['action']['data']['listAfter']['name']}"
-            elif request.json['action']['data'].get('old'):
-                comment = f"Название вашей карточки {request.json['action']['data']['old']} изменилось на {request.json['action']['data']['card']['name']} пользователем {res['author']}"
+                res['comment'] = f"Вас переместил {res['author']} из листа {request.json['action']['data']['listBefore']['name']} в {request.json['action']['data']['listAfter']['name']}"
+            elif request.json['action']['data'].get('old').get('name'):
+                res['comment'] = f"Название вашей карточки {request.json['action']['data']['old']['name']} изменилось на {request.json['action']['data']['card']['name']} пользователем {res['author']}"
+            elif request.json['action']['data'].get('old').get('dueReminder')
+                res['comment'] = f"Время вашей карточки {request.json['action']['data']['card']['name']} было удалено пользователем {res['author']}"
+            elif request.json['action']['data'].get('old').get('due')
+                res['comment'] = f"На вашей карточке {request.json['action']['data']['card']['name']} было уставновлено время пользователем {res['author']}"
+            res['card'] = request.json['action']['data']['card']
 
         elif res['action'] == 'removeMemberFromCard':
-            comment = f"Вы удалены из карточки {request.json['action']['data']['card']['name']} пользователем {res['author']}"
+            res['author'] = request.json['action']['memberCreator']['username']
+            res['board'] = request.json['action']['data']['board']['name']
+            res['comment'] = f"Вы удалены из карточки {request.json['action']['data']['card']['name']} пользователем {res['author']}"
+            res['id'] = requests.json['action']['member']['id']
 
         elif res['action'] == 'addMemberToCard':
-            comment = f"Вы добавлены в карточку {request.json['action']['data']['card']['name']} пользователем {res['author']}"
+            res['author'] = request.json['action']['memberCreator']['username']
+            res['board'] = request.json['action']['data']['board']['name']
+            res['comment'] = f"Вы добавлены в карточку {request.json['action']['data']['card']['name']} пользователем {res['author']}"
+            res['id'] = requests.json['action']['member']['id']
 
         elif res['action'] == 'commentCard':
-            comment = f"Комментарий к вашей карточке {request.json['action']['data']['card']['name']}:\n{request.json['action']['data']['text']}\n{res['author']}"
+            res['author'] = request.json['action']['memberCreator']['username']
+            res['users'] = request.json['action']['data']['text'].split('@')
+            res['board'] = request.json['action']['data']['board']['name']
+            res['comment'] = f"Комментарий к вашей карточке {request.json['action']['data']['card']['name']}:\n{request.json['action']['data']['text']}\n{res['author']}"
 
 
-        res['comment'] = comment
+        bot.send_info(res)
+        
 
         return res, 200
     elif request.method == 'HEAD':

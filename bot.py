@@ -16,7 +16,6 @@ bot = telebot.TeleBot(token)
 def auth(message):
 	bot.send_message(message.chat.id, "Добро пожаловать! Прежде чем приступить вы должны перейти по ссылке, скопировать оттуда токен и отправить мне в следующем формате! \n /token 123456789 ")
 	bot.send_message(message.chat.id, 'https://trello.com/1/authorize?expiration=1day&name=MyPersonalToken&scope=read&response_type=token&key=193119f42d583601d5095b462bde9300')
-	print(message.chat.id)
 
 @bot.message_handler(commands=['token'])
 def token_accept(message):
@@ -33,7 +32,7 @@ def token_accept(message):
 		for board in boards:
 			inline_keyboard.add(InlineKeyboardButton(board['name'], callback_data = '1%' + board['name'] + '%' + board['id']))
 
-		db.set_user_token_data((message.chat.id, data[1]))
+		db.set_user_token_data((message.chat.id, data[1], first.get_your_id(data[1])))
 
 		bot.send_message(message.chat.id, "Вы успешно авторизовались!")
 		bot.send_message(message.chat.id, "Выберите доски для отслеживания!", reply_markup = [inline_keyboard])
@@ -42,16 +41,14 @@ def token_accept(message):
 
 @bot.callback_query_handler(func=lambda c: c.data.split('%')[0] == '1')
 def process_callback_boards_button(callback_query: CallbackQuery):
-	print(callback_query.from_user.id)
 	data = callback_query.data.split('%')
 	bot.answer_callback_query(callback_query.id)
-	db.set_user_board_data((db.get_user_token_by_tele_token(callback_query.from_user.id), data[2]))
+	db.set_user_board_data((db.get_user_token_by_tele_token(callback_query.chat.id), data[2]))
 	bot.send_message(callback_query.from_user.id, f'Доска *{" ".join(data[1:len(data) - 1])}* успешно добавлена для отслеживания', parse_mode = 'Markdown')
 
 
 def send_info(data):
 	print(data)
-	bot.send_message(465696946, 'qwerty_12345')
 
 if __name__ == '__main__':
 	bot.infinity_polling()

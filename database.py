@@ -9,17 +9,17 @@ class DataBase:
 
     def create_tables(self):
 
-        self.cur.execute("""CREATE TABLE IF NOT EXISTS user_token (tele_token TEXT, user_token TEXT)""")
+        self.cur.execute("""CREATE TABLE IF NOT EXISTS user_token (tele_token TEXT, user_token TEXT, user_id TEXT)""")
         self.cur.execute("""CREATE TABLE IF NOT EXISTS user_boards (user_token TEXT, board_id TEXT)""")
         self.cur.execute("""CREATE TABLE IF NOT EXISTS board_info (board_id TEXT, message_type INTEGER)""")
 
 
     def set_user_token_data(self, data):
 
-        self.cur.execute(f"""INSERT INTO user_token (tele_token, user_token) 
-            SELECT '{data[0]}', '{data[1]}' 
+        self.cur.execute(f"""INSERT INTO user_token (tele_token, user_token, user_id) 
+            SELECT '{data[0]}', '{data[1]}', '{data[2]}' 
             WHERE NOT EXISTS 
-            (SELECT 1 FROM user_token WHERE tele_token='{data[0]}' AND user_token='{data[1]}')""")
+            (SELECT 1 FROM user_token WHERE tele_token='{data[0]}' AND user_token='{data[1]}' AND user_id='{data[2]}')""")
         self.con.commit()
 
     def set_user_board_data(self, data):
