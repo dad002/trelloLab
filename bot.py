@@ -82,9 +82,10 @@ def process_callback_boards_button(callback_query: CallbackQuery):
 		boards = db.get_all_boards_by_token(db.get_user_token_by_tele_token(callback_query.message.chat.id))
 		if boards != None:
 			inline_keyboard = InlineKeyboardMarkup()
+			i = 0
 			for board in boards:
 				board_name = first.get_boards_name_by_id(board[0], db.get_user_token_by_tele_token(callback_query.message.chat.id))
-				inline_keyboard.add(InlineKeyboardButton(board_name, callback_data="pass"))
+				inline_keyboard.add(InlineKeyboardButton(board_name, callback_data="pass" + str(i)))
 			bot.send_message(callback_query.from_user.id, "Вот что мне удалось найти", reply_markup = [inline_keyboard])
 		else:
 			bot.send_message(callback_query.from_user.id, "Там пока пустовато")
