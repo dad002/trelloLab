@@ -68,8 +68,7 @@ def send_info(data):
 			tmp = first.get_members_by_card_id(data['card'], token[0])
 			if tmp != None:
 				for elem in tmp:
-
-					res = db.get_user_token_and_tele_token_by_id(data['card'])
+					res = db.get_user_token_and_tele_token_by_id(elem)
 					if res is not None:
 						bot.send_message(res[0], data['comment'])
 
