@@ -57,7 +57,9 @@ def send_info(data):
 	elif data.get('card'):
 		pass
 	elif data.get('users'):
-		pass
+		for user in data['users'][1:]:
+			user.rstrip()
+			print(user)
 
 if __name__ == '__main__':
 	bot.infinity_polling()
