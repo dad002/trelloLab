@@ -16,12 +16,12 @@ def get_boards(yourToken):
     else:
         return None
 
-def set_webhook(yourToken):
+def set_webhook(yourToken, idModel):
     url = f"https://api.trello.com/1/webhooks?key={yourKey}&token={yourToken}"
 
     query = {
        'callbackURL': 'https://trellostudy.herokuapp.com/webhook',
-       'idModel': '5ebab65e0365003fd12a934c'
+       'idModel': {idModel}
     }
 
     response = requests.request(

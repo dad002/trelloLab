@@ -38,8 +38,6 @@ def token_accept(message):
 
 		db.set_user_token_data((message.chat.id, data[1], first.get_your_id(data[1]), user_login))
 
-		first.set_webhook(data[1])
-
 		bot.send_message(message.chat.id, "Вы успешно авторизовались!")
 		bot.send_message(message.chat.id, "Выберите доски для отслеживания!", reply_markup = [inline_keyboard])
 	else:
@@ -47,7 +45,9 @@ def token_accept(message):
 
 @bot.callback_query_handler(func=lambda c: c.data.split('%')[0] == '1')
 def process_callback_boards_button(callback_query: CallbackQuery):
+
 	data = callback_query.data.split('%')
+	first.set_webhook(db.get_user_token_by_tele_token(callback_query.from_user.id), data[2])
 	bot.answer_callback_query(callback_query.id)
 	db.set_user_board_data((db.get_user_token_by_tele_token(callback_query.from_user.id), data[2]))
 	bot.send_message(callback_query.from_user.id, f'Доска *{" ".join(data[1:len(data) - 1])}* успешно добавлена для отслеживания', parse_mode = 'Markdown')
