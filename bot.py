@@ -62,9 +62,9 @@ def send_info(data):
 	elif data.get('card'):
 
 		tokens = db.get_tokens()
-		print(tokens)
 		for token in tokens:
 			tmp = first.get_members_by_card_id(data['card'], token)
+			print(tmp)
 			if tmp != None:
 				for elem in tmp:
 					res = db.get_user_token_and_tele_token_by_id(data['id'])
@@ -73,7 +73,6 @@ def send_info(data):
 	elif data.get('users'):
 		for user in data['users'][1:]:
 			res = db.get_tele_token_by_login(user.rstrip())
-			print(res)
 			bot.send_message(res, data['comment'])
 if __name__ == '__main__':
 	bot.infinity_polling()
