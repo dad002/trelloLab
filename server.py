@@ -54,8 +54,6 @@ def webhook():
             res['board'] = request.json['action']['data']['board']['name']
             res['comment'] = f"Комментарий к вашей карточке {request.json['action']['data']['card']['name']}:\n{request.json['action']['data']['text']}\n{res['author']}"
 
-        print(res)
-        print('----------')
         bot.send_info(res)
         
 

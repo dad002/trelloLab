@@ -14,7 +14,6 @@ bot = telebot.TeleBot(token)
 
 @bot.message_handler(commands=['start'])
 def auth(message):
-	print(message.chat.id)
 	bot.send_message(message.chat.id, "Добро пожаловать! Прежде чем приступить вы должны перейти по ссылке, скопировать оттуда токен и отправить мне в следующем формате! \n /token 123456789 ")
 	bot.send_message(message.chat.id, 'https://trello.com/1/authorize?expiration=1day&name=MyPersonalToken&scope=read&response_type=token&key=193119f42d583601d5095b462bde9300')
 
@@ -54,9 +53,9 @@ def process_callback_boards_button(callback_query: CallbackQuery):
 
 
 def send_info(data):
+	print(data)
 
 	if data.get('id'):
-
 		res = db.get_user_token_and_tele_token_by_id(data['id'])
 		bot.send_message(res[0], data['comment'])
 
@@ -64,7 +63,6 @@ def send_info(data):
 
 		tokens = db.get_tokens()
 		for token in tokens:
-			print("****",data['card'], token)
 			tmp = first.get_members_by_card_id(data['card'], token[0])
 			if tmp != None:
 				for elem in tmp:
