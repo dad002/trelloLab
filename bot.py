@@ -54,6 +54,7 @@ def process_callback_boards_button(callback_query: CallbackQuery):
 
 
 def send_info(data):
+
 	if data.get('id'):
 
 		res = db.get_user_token_and_tele_token_by_id(data['id'])
@@ -64,7 +65,7 @@ def send_info(data):
 		tokens = db.get_tokens()
 		for token in tokens:
 			tmp = first.get_members_by_card_id(data['card'], token)
-			print(tmp)
+			print("****",tmp)
 			if tmp != None:
 				for elem in tmp:
 					res = db.get_user_token_and_tele_token_by_id(data['id'])
@@ -74,6 +75,7 @@ def send_info(data):
 		for user in data['users'][1:]:
 			res = db.get_tele_token_by_login(user.rstrip())
 			bot.send_message(res, data['comment'])
+
 if __name__ == '__main__':
 	bot.infinity_polling()
 	bot.send_info({'card': '5ebab65e0365003fd12a934c'})

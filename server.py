@@ -34,7 +34,7 @@ def webhook():
                 res['comment'] = f"Время вашей карточки {request.json['action']['data']['card']['name']} было удалено пользователем {res['author']}"
             elif request.json['action']['data'].get('old').get('due'):
                 res['comment'] = f"На вашей карточке {request.json['action']['data']['card']['name']} было уставновлено время пользователем {res['author']}"
-            res['card'] = request.json['action']['data']['card']
+            res['card'] = request.json['action']['data']['card']['id']
 
         elif res['action'] == 'removeMemberFromCard':
             res['author'] = request.json['action']['memberCreator']['username']
