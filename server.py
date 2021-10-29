@@ -33,9 +33,9 @@ def webhook():
                 res['comment'] = f"Вас переместил {res['author']} из листа {request.json['action']['data']['listBefore']['name']} в {request.json['action']['data']['listAfter']['name']}"
             elif request.json['action']['data'].get('old').get('name'):
                 res['comment'] = f"Название вашей карточки {request.json['action']['data']['old']['name']} изменилось на {request.json['action']['data']['card']['name']} пользователем {res['author']}"
-            elif request.json['action']['data'].get('old').get('dueReminder')
+            elif request.json['action']['data'].get('old').get('dueReminder'):
                 res['comment'] = f"Время вашей карточки {request.json['action']['data']['card']['name']} было удалено пользователем {res['author']}"
-            elif request.json['action']['data'].get('old').get('due')
+            elif request.json['action']['data'].get('old').get('due'):
                 res['comment'] = f"На вашей карточке {request.json['action']['data']['card']['name']} было уставновлено время пользователем {res['author']}"
             res['card'] = request.json['action']['data']['card']
 
