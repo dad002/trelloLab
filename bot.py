@@ -64,8 +64,8 @@ def send_info(data):
 
 		tokens = db.get_tokens()
 		for token in tokens:
+			print("****",data['card'], token)
 			tmp = first.get_members_by_card_id(data['card'], token)
-			print("****",tmp)
 			if tmp != None:
 				for elem in tmp:
 					res = db.get_user_token_and_tele_token_by_id(data['id'])
