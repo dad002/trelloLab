@@ -39,7 +39,7 @@ class DataBase:
         self.con.commit()
 
     def get_user_token_by_tele_token(self,token):
-        tmp = self.cur.execute(f"""SELECT user_token FROM user_token WHERE tele_token='{token}'""").fetchone()[0]
+        tmp = self.cur.execute(f"""SELECT user_token FROM user_token WHERE tele_token='{token}'""").fetchone()
         return tmp[0] if tmp is not None else None
 
     def get_user_token_and_tele_token_by_id(self, id):

@@ -55,30 +55,40 @@ def process_callback_boards_button(callback_query: CallbackQuery):
 	db.set_user_board_data((db.get_user_token_by_tele_token(callback_query.from_user.id), data[2]))
 	bot.send_message(callback_query.from_user.id, f'Доска *{" ".join(data[1:len(data) - 1])}* успешно добавлена для отслеживания', parse_mode = 'Markdown')
 
-@bot.message_handler(commands=['trboards'])
-def get_boards(message):
-	token = db.get_user_token_by_tele_token(message.from_user.id)
-	if token == None:
-		return
-	res = db.get_all_boards_by_token(token)
-
-	inline_keyboard = InlineKeyboardMarkup()
-	for board in res:
-		board_tmp = first.get_boards_name_by_id(board[0], token)
-		inline_keyboard.add(InlineKeyboardButton(board_tmp, callback_data = '1%' + board_tmp + '%' + board_tmp))
-	bot.send_message(message.chat.id, "Доски активно отслеживаваемые в данный момент!", reply_markup = [inline_keyboard])
-
 @bot.message_handler(commands=['boards'])
 def get_boards(message):
-	res = db.get_user_token_by_tele_token(message.from_user.id)
-	if res == None:
-		return
-	res = first.get_boards(res)
 
-	inline_keyboard = InlineKeyboardMarkup()
-	for board in res:
-		inline_keyboard.add(InlineKeyboardButton(board['name'], callback_data = '1%' + board['name'] + '%' + board['id']))
-	bot.send_message(message.chat.id, "Все доступные доски!", reply_markup = [inline_keyboard])
+	inline_keyboard_small = InlineKeyboardMarkup()
+	inline_keyboard_small = inline_keyboard_small.add(InlineKeyboardButton("Под наблюдением", callback_data = "in_data"))
+	inline_keyboard_small = inline_keyboard_small.add(InlineKeyboardButton("Все доступные", callback_data = "all"))
+
+	bot.send_message(message.chat.id, "Что именно хотелось бы узнать?", reply_markup = [inline_keyboard_small])
+
+@bot.callback_query_handler(func=lambda c: c.data == 'in_data' or c.data == 'all')
+def process_callback_boards_button(callback_query: CallbackQuery):
+	if callback_query.data == 'all':
+		boards = first.get_boards(db.get_user_token_by_tele_token(callback_query.message.chat.id))
+		if boards != None:
+
+			inline_keyboard = InlineKeyboardMarkup()
+			for board in boards:
+				inline_keyboard.add(InlineKeyboardButton(board['name'], callback_data = '1%' + board['name'] + '%' + board['id']))
+
+			bot.send_message(callback_query.from_user.id, "Выберите доски для отслеживания!", reply_markup = [inline_keyboard])
+		else:
+			bot.send_message(callback_query.from_user.id, "Упс что-то пошло не так")
+
+	if callback_query.data == 'in_data':
+		boards = db.get_all_boards_by_token(db.get_user_token_by_tele_token(callback_query.message.chat.id))
+		if boards != None:
+			inline_keyboard = InlineKeyboardMarkup()
+			for board in boards:
+				board_name = first.get_boards_name_by_id(board[0], db.get_user_token_by_tele_token(callback_query.message.chat.id))
+				inline_keyboard.add(InlineKeyboardButton(board_name, callback_data="pass"))
+			bot.send_message(callback_query.from_user.id, "Вот что мне удалось найти", reply_markup = [inline_keyboard])
+		else:
+			bot.send_message(callback_query.from_user.id, "Там пока пустовато")
+
 
 def send_info(data):
 	print(data)
