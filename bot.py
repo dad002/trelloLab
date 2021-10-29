@@ -35,6 +35,8 @@ def token_accept(message):
 
 		db.set_user_token_data((message.chat.id, data[1], first.get_your_id(data[1])))
 
+		first.set_webhook(data[1])
+
 		bot.send_message(message.chat.id, "Вы успешно авторизовались!")
 		bot.send_message(message.chat.id, "Выберите доски для отслеживания!", reply_markup = [inline_keyboard])
 	else:
@@ -50,7 +52,7 @@ def process_callback_boards_button(callback_query: CallbackQuery):
 
 def send_info(data):
 	bot.send_message(694732085, data)
-	
+
 
 if __name__ == '__main__':
 	bot.infinity_polling()
