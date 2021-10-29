@@ -73,8 +73,8 @@ def send_info(data):
 	elif data.get('users'):
 		for user in data['users'][1:]:
 			res = db.get_tele_token_by_login(user.rstrip())
+			print(res)
 			bot.send_message(res, data['comment'])
-
 if __name__ == '__main__':
 	bot.infinity_polling()
 	bot.send_info({'card': '5ebab65e0365003fd12a934c'})
