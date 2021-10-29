@@ -70,7 +70,8 @@ def send_info(data):
 				for elem in tmp:
 
 					res = db.get_user_token_and_tele_token_by_id(data['card'])
-					bot.send_message(res[0], data['comment'])
+					if res is not None:
+						bot.send_message(res[0], data['comment'])
 
 	elif data.get('users'):
 		for user in data['users'][1:]:
