@@ -40,13 +40,13 @@ def webhook():
             res['author'] = request.json['action']['memberCreator']['username']
             res['board'] = request.json['action']['data']['board']['name']
             res['comment'] = f"Вы удалены из карточки {request.json['action']['data']['card']['name']} пользователем {res['author']}"
-            res['id'] = requests.json['action']['member']['id']
+            res['id'] = request.json['action']['member']['id']
 
         elif res['action'] == 'addMemberToCard':
             res['author'] = request.json['action']['memberCreator']['username']
             res['board'] = request.json['action']['data']['board']['name']
             res['comment'] = f"Вы добавлены в карточку {request.json['action']['data']['card']['name']} пользователем {res['author']}"
-            res['id'] = requests.json['action']['member']['id']
+            res['id'] = request.json['action']['member']['id']
 
         elif res['action'] == 'commentCard':
             res['author'] = request.json['action']['memberCreator']['username']
