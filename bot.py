@@ -12,6 +12,10 @@ db.create_tables()
 
 bot = telebot.TeleBot(token)
 
+@bot.message_handler(commands=['help'])
+def help(message):
+	bot.send_message(message.chat.id, "/start - Начало приключения \n /token - Добавить токен для отслеживания \n /boards - Посмотреть все доступные доски \n /trboards - посмотреть отслеживаваемые доски")
+
 @bot.message_handler(commands=['start'])
 def auth(message):
 	bot.send_message(message.chat.id, "Добро пожаловать! Прежде чем приступить вы должны перейти по ссылке, скопировать оттуда токен и отправить мне в следующем формате! \n /token 123456789 ")
@@ -51,6 +55,26 @@ def process_callback_boards_button(callback_query: CallbackQuery):
 	db.set_user_board_data((db.get_user_token_by_tele_token(callback_query.from_user.id), data[2]))
 	bot.send_message(callback_query.from_user.id, f'Доска *{" ".join(data[1:len(data) - 1])}* успешно добавлена для отслеживания', parse_mode = 'Markdown')
 
+@bot.message_handler(commands=['trboards'])
+def get_boards(message):
+	token = db.get_user_token_by_tele_token(message.from_user.id)
+	res = db.get_all_boards_by_token(token)
+
+	inline_keyboard = InlineKeyboardMarkup()
+	for board in res:
+		board_tmp = first.get_boards_name_by_id(board[0], token)
+		inline_keyboard.add(InlineKeyboardButton(board_tmp, callback_data = '1%' + board_tmp + '%' + board_tmp))
+	bot.send_message(message.chat.id, "Доски активно отслеживаваемые в данный момент!", reply_markup = [inline_keyboard])
+
+@bot.message_handler(commands=['boards'])
+def get_boards(message):
+	res = db.get_user_token_by_tele_token(message.from_user.id)
+	res = first.get_boards(res)
+
+	inline_keyboard = InlineKeyboardMarkup()
+	for board in res:
+		inline_keyboard.add(InlineKeyboardButton(board['name'], callback_data = '1%' + board['name'] + '%' + board['id']))
+	bot.send_message(message.chat.id, "Доски активно отслеживаваемые в данный момент!", reply_markup = [inline_keyboard])
 
 def send_info(data):
 	print(data)
@@ -77,4 +101,3 @@ def send_info(data):
 
 if __name__ == '__main__':
 	bot.infinity_polling()
-	bot.send_info({'card': '5ebab65e0365003fd12a934c'})

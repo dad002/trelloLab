@@ -49,3 +49,6 @@ class DataBase:
 
     def get_tele_token_by_login(self, login):
         return self.cur.execute(f"SELECT tele_token FROM user_token WHERE user_login = '{login}'").fetchone()[0]
+
+    def get_all_boards_by_token(self,token):
+        return self.cur.execute(f"SELECT board_id FROM user_boards WHERE user_token='{token}'").fetchall()
