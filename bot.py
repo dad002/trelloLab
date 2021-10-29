@@ -45,7 +45,7 @@ def token_accept(message):
 @bot.callback_query_handler(func=lambda c: c.data.split('%')[0] == '1')
 def process_callback_boards_button(callback_query: CallbackQuery):
 	data = callback_query.data.split('%')
-	bot.answer_callback_query(callback_query.id)
+	bot.answer_callback_query(callback_query)
 	db.set_user_board_data((db.get_user_token_by_tele_token(callback_query.chat.id), data[2]))
 	bot.send_message(callback_query.from_user.id, f'Доска *{" ".join(data[1:len(data) - 1])}* успешно добавлена для отслеживания', parse_mode = 'Markdown')
 
@@ -53,8 +53,11 @@ def process_callback_boards_button(callback_query: CallbackQuery):
 def send_info(data):
 	if data.get('id'):
 		res = db.get_user_token_and_tele_token_by_id(data['id'])
-		bot.send_message(res[0], data)
-
+		bot.send_message(res[0], data['comment'])
+	elif data.get('card'):
+		pass
+	elif data.get('users'):
+		pass
 
 if __name__ == '__main__':
 	bot.infinity_polling()
