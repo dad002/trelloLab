@@ -14,7 +14,7 @@ bot = telebot.TeleBot(token)
 
 @bot.message_handler(commands=['help'])
 def help(message):
-	bot.send_message(message.chat.id, "/start - Начало приключения \n /token - Добавить токен для отслеживания \n /boards - Посмотреть все доступные доски \n /trboards - посмотреть отслеживаваемые доски")
+	bot.send_message(message.chat.id, "/start - Начало приключения \n /token - Добавить токен для отслеживания \n /boards - Посмотреть все доступные доски ")
 
 @bot.message_handler(commands=['start'])
 def auth(message):
@@ -95,7 +95,7 @@ def send_info(data):
 
 	if data.get('id'):
 		res = db.get_user_token_and_tele_token_by_id(data['id'])
-		bot.send_message(res[0], data['comment'])
+		bot.send_message(res[0], data['comment'] + data['board'])
 
 	elif data.get('card'):
 
@@ -106,12 +106,12 @@ def send_info(data):
 				for elem in tmp:
 					res = db.get_user_token_and_tele_token_by_id(elem)
 					if res is not None:
-						bot.send_message(res[0], data['comment'])
+						bot.send_message(res[0], data['comment'] + data['board'])
 
 	elif data.get('users'):
 		for user in data['users'][1:]:
 			res = db.get_tele_token_by_login(user.rstrip())
-			bot.send_message(res, data['comment'])
+			bot.send_message(res, data['comment'] + data['board'])
 
 if __name__ == '__main__':
 	bot.infinity_polling()
