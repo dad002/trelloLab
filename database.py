@@ -39,7 +39,8 @@ class DataBase:
         self.con.commit()
 
     def get_user_token_by_tele_token(self,token):
-        return self.cur.execute(f"""SELECT user_token FROM user_token WHERE tele_token='{token}'""").fetchone()[0]
+        tmp = self.cur.execute(f"""SELECT user_token FROM user_token WHERE tele_token='{token}'""").fetchone()[0]
+        return tmp[0] if tmp is not None else None
 
     def get_user_token_and_tele_token_by_id(self, id):
         return self.cur.execute(f"SELECT tele_token, user_token FROM user_token WHERE user_id = '{id}'").fetchone()
@@ -48,7 +49,8 @@ class DataBase:
         return self.cur.execute(f"SELECT user_token FROM user_token").fetchall()
 
     def get_tele_token_by_login(self, login):
-        return self.cur.execute(f"SELECT tele_token FROM user_token WHERE user_login = '{login}'").fetchone()[0]
+        tmp = self.cur.execute(f"SELECT tele_token FROM user_token WHERE user_login = '{login}'").fetchone()
+        return tmp[0] if tmp is not None else None
 
     def get_all_boards_by_token(self,token):
         return self.cur.execute(f"SELECT board_id FROM user_boards WHERE user_token='{token}'").fetchall()
