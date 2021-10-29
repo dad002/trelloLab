@@ -58,6 +58,8 @@ def process_callback_boards_button(callback_query: CallbackQuery):
 @bot.message_handler(commands=['trboards'])
 def get_boards(message):
 	token = db.get_user_token_by_tele_token(message.from_user.id)
+	if token == None:
+		return
 	res = db.get_all_boards_by_token(token)
 
 	inline_keyboard = InlineKeyboardMarkup()
@@ -69,12 +71,14 @@ def get_boards(message):
 @bot.message_handler(commands=['boards'])
 def get_boards(message):
 	res = db.get_user_token_by_tele_token(message.from_user.id)
+	if res == None:
+		return
 	res = first.get_boards(res)
 
 	inline_keyboard = InlineKeyboardMarkup()
 	for board in res:
 		inline_keyboard.add(InlineKeyboardButton(board['name'], callback_data = '1%' + board['name'] + '%' + board['id']))
-	bot.send_message(message.chat.id, "Доски активно отслеживаваемые в данный момент!", reply_markup = [inline_keyboard])
+	bot.send_message(message.chat.id, "Все доступные доски!", reply_markup = [inline_keyboard])
 
 def send_info(data):
 	print(data)
