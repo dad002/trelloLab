@@ -13,6 +13,7 @@ user_token = ''
 
 @app.route('/webhook', methods=['POST','HEAD'])
 def webhook():
+    print(request)
     if request.method == 'POST':
 
         res = {
@@ -53,7 +54,7 @@ def webhook():
             res['users'] = request.json['action']['data']['text'].split('@')
             res['board'] = request.json['action']['data']['board']['name']
             res['comment'] = f"Your card has been commented {request.json['action']['data']['card']['name']}:\n{request.json['action']['data']['text']}\n{res['author']}"
-
+        print(res)
         bot.send_info(res)
         
 
