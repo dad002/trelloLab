@@ -29,7 +29,7 @@ def set_webhook(yourToken, idModel):
        url,
        params=query
     )
-    print(response)
+    print(response.text)
 
 def get_your_id(yourToken):
     url = f'https://api.trello.com/1/members/me/?key={yourKey}&token={yourToken}'

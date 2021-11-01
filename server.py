@@ -40,7 +40,7 @@ def webhook():
         elif res['action'] == 'removeMemberFromCard':
             res['author'] = request.json['action']['memberCreator']['username']
             res['board'] = request.json['action']['data']['board']['name']
-            res['comment'] = f"You have been removed {request.json['action']['data']['card']['name']} by user {res['author']}"
+            res['comment'] = f"You have been removed from the card {request.json['action']['data']['card']['name']} by user {res['author']}"
             res['id'] = request.json['action']['member']['id']
 
         elif res['action'] == 'addMemberToCard':
