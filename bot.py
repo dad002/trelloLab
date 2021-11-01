@@ -115,4 +115,5 @@ def send_info(data):
 			bot.send_message(res, data['comment'] + "Board name: " + data['board'])
 
 if __name__ == '__main__':
+	bot.remove_webhook()
 	bot.infinity_polling()
