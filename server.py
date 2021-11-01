@@ -13,7 +13,7 @@ user_token = ''
 
 @app.route('/webhook', methods=['POST','HEAD'])
 def webhook():
-    print(request)
+    print(request.method)
     if request.method == 'POST':
 
         res = {
