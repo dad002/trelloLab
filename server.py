@@ -27,32 +27,32 @@ def webhook():
             res['author'] = request.json['action']['memberCreator']['username']
             res['board'] = request.json['action']['data']['board']['name']
             if request.json['action']['data'].get('listBefore'):
-                res['comment'] = f"Вас переместил {res['author']} из листа {request.json['action']['data']['listBefore']['name']} в {request.json['action']['data']['listAfter']['name']}"
+                res['comment'] = f"{res['author']} moved your card from  {request.json['action']['data']['listBefore']['name']} to {request.json['action']['data']['listAfter']['name']}"
             elif request.json['action']['data'].get('old').get('name'):
-                res['comment'] = f"Название вашей карточки {request.json['action']['data']['old']['name']} изменилось на {request.json['action']['data']['card']['name']} пользователем {res['author']}"
+                res['comment'] = f"{res['author']} changed your card name from {request.json['action']['data']['old']['name']} to {request.json['action']['data']['card']['name']} пользователем {res['author']}"
             elif request.json['action']['data'].get('old').get('due') != None:
-                res['comment'] = f"Время вашей карточки {request.json['action']['data']['card']['name']} было удалено пользователем {res['author']}"
+                res['comment'] = f"{res['author']} changed your card time named {request.json['action']['data']['card']['name']} (deleting type)"
             elif request.json['action']['data'].get('old').get('due') == None:
-                res['comment'] = f"На вашей карточке {request.json['action']['data']['card']['name']} было уставновлено время пользователем {res['author']}"
+                res['comment'] = f"{res['author']} changed your card time named {request.json['action']['data']['card']['name']} (adding type)"
             res['card'] = request.json['action']['data']['card']['id']
 
         elif res['action'] == 'removeMemberFromCard':
             res['author'] = request.json['action']['memberCreator']['username']
             res['board'] = request.json['action']['data']['board']['name']
-            res['comment'] = f"Вы удалены из карточки {request.json['action']['data']['card']['name']} пользователем {res['author']}"
+            res['comment'] = f"You have been removed {request.json['action']['data']['card']['name']} by user {res['author']}"
             res['id'] = request.json['action']['member']['id']
 
         elif res['action'] == 'addMemberToCard':
             res['author'] = request.json['action']['memberCreator']['username']
             res['board'] = request.json['action']['data']['board']['name']
-            res['comment'] = f"Вы добавлены в карточку {request.json['action']['data']['card']['name']} пользователем {res['author']}"
+            res['comment'] = f"You have been added to the card {request.json['action']['data']['card']['name']} by user {res['author']}"
             res['id'] = request.json['action']['member']['id']
 
         elif res['action'] == 'commentCard':
             res['author'] = request.json['action']['memberCreator']['username']
             res['users'] = request.json['action']['data']['text'].split('@')
             res['board'] = request.json['action']['data']['board']['name']
-            res['comment'] = f"Комментарий к вашей карточке {request.json['action']['data']['card']['name']}:\n{request.json['action']['data']['text']}\n{res['author']}"
+            res['comment'] = f"Your card has been commented {request.json['action']['data']['card']['name']}:\n{request.json['action']['data']['text']}\n{res['author']}"
 
         bot.send_info(res)
         
