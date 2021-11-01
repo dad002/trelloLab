@@ -15,6 +15,7 @@ class DataBase:
 
 
     def set_user_token_data(self, data):
+        print('user', data)
 
         self.cur.execute(f"""INSERT INTO user_token (tele_token, user_token, user_id, user_login) 
             SELECT '{data[0]}', '{data[1]}', '{data[2]}', '{data[3]}' 
@@ -23,6 +24,7 @@ class DataBase:
         self.con.commit()
 
     def set_user_board_data(self, data):
+        print(data)
 
         self.cur.execute(f"""INSERT INTO user_boards (user_token, board_id) 
             SELECT '{data[0]}', '{data[1]}' 

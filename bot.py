@@ -30,11 +30,11 @@ def token_accept(message):
 		return
  
 	boards = first.get_boards(data[1])
+	print(data[1])
 	if boards != None:
 
 		inline_keyboard = InlineKeyboardMarkup()
 		for board in boards:
-			print(board['name'])
 			inline_keyboard.add(InlineKeyboardButton(board['name'], callback_data = '1%' + board['name'] + '%' + board['id']))
 
 		user_login = first.get_your_login(data[1])
@@ -52,6 +52,7 @@ def process_callback_boards_button(callback_query: CallbackQuery):
 	data = callback_query.data.split('%')
 	first.set_webhook(db.get_user_token_by_tele_token(callback_query.from_user.id), data[2])
 	bot.answer_callback_query(callback_query.id)
+
 	db.set_user_board_data((db.get_user_token_by_tele_token(callback_query.from_user.id), data[2]))
 	bot.send_message(callback_query.from_user.id, f'Board *{" ".join(data[1:len(data) - 1])}* successfully added for tracking', parse_mode = 'Markdown')
 
@@ -67,11 +68,14 @@ def get_boards(message):
 @bot.callback_query_handler(func=lambda c: c.data == 'in_data' or c.data == 'all')
 def process_callback_boards_button(callback_query: CallbackQuery):
 	if callback_query.data == 'all':
+		print(db.get_user_token_by_tele_token(callback_query.message.chat.id))
 		boards = first.get_boards(db.get_user_token_by_tele_token(callback_query.message.chat.id))
+		print(boards)
 		if boards != None:
-
+			print(boards)
 			inline_keyboard = InlineKeyboardMarkup()
 			for board in boards:
+				print(board['name'])
 				inline_keyboard.add(InlineKeyboardButton(board['name'], callback_data = '1%' + board['name'] + '%' + board['id']))
 
 			bot.send_message(callback_query.from_user.id, "Select the boards to track!", reply_markup = [inline_keyboard])
